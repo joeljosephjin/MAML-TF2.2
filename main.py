@@ -14,7 +14,7 @@ from tqdm import tqdm
 import config as cfg
 from dataReader import *
 from meta_learner import MetaLearner
-from models.eeg_net import EEGNet, cnn, eeg_net, loss
+from models.eeg_net import cnn, eeg_net
 from models.svm import svm
 from train import maml_eval, maml_train_on_batch
 
@@ -100,7 +100,7 @@ def MAML_main():
         maml_model = load_model(maml_model, cfg.ckpt_dir)
         maml_model = MetaLearner.initialize(maml_model)
         maml_model.summary()
-        _, test_list = read_omniglot("/home/carlos/code/last/MAML-keras/datasets/omniglot/images_evaluation")
+        _, test_list = read_omniglot("datasets/omniglot/images_evaluation")
         test_dataset = task_split(test_list, q_query=cfg.q_query, n_way=cfg.n_way, k_shot=cfg.k_shot)
         test_iter = DataIter(test_dataset)
         test_step = len(test_dataset) // cfg.eval_batch_size
@@ -114,7 +114,7 @@ def MAML_main():
     maml_model.summary()
     checkpoint = tf.train.Checkpoint(maml_model=maml_model)
 
-    train_list, valid_list = read_omniglot("/home/carlos/code/last/MAML-keras/datasets/omniglot/images_background")
+    train_list, valid_list = read_omniglot("datasets/omniglot/images_background")
     train_dataset = task_split(train_list, q_query=cfg.q_query, n_way=cfg.n_way, k_shot=cfg.k_shot)
     valid_dataset = task_split(valid_list, q_query=cfg.q_query, n_way=cfg.n_way, k_shot=cfg.k_shot)
 
@@ -196,4 +196,4 @@ def MAML_main():
 
 
 if __name__ == '__main__':
-    eeg_net_main()
+    MAML_main()
